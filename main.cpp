@@ -65,8 +65,9 @@ void Bank::get_interest(int day)
     int i = (day / 30) * 30;
 
     if( i > previous_day && i < day)
-      std::cout << "Lloyd is a bundle of sticks" << std::endl;
-         
+    total_balance *= interest_rate;
+    
+    total_interest = total_balance * (interest_rate - 1);     
 }
 
 double Bank::add_balance(double a)
