@@ -17,93 +17,74 @@ class Bank
       Bank();
       void print();
       void get_interest(int day);
-      double add_balance(double a);
-      double average_daily(double a);
-      double min_daily(double a);
-      double get_average();
-      void set_previous_day(int a);
+      double add_balance(double a); // pulls transactions amounts in to total balance
+      double average_daily(double average, int day); // takes the total amount for one month and divides it by 30
+      double min_daily(double a); // ensures the daily minimum is met.
+      double get_average();      
+      void set_previous_day(int a); // ensures the interest is added every 30 days
    private:
       double total_balance;
       double interest_rate;
       double total_interest;
       int previous_day;
+      double the_average;
 };
 
 Bank::Bank()
 {
    total_balance = 0.0;
-   interest_rate= 1.005;
+   interest_rate= 1.005; // sets the interest rate at .5%
 }
 
-void Bank::print()
+void Bank::print() 
 {
    std::cout << "Total Interest is: " << total_interest << std::endl;
    std::cout << "Current balance is: " << total_balance << std::endl;
+   std::cout << "Average daily Balance is: " << the_average << std::endl;
 }
 
-void Bank::set_previous_day(int a)
+void Bank::set_previous_day(int a) // used in get interest to set a 30 day cycle
 {
    previous_day = a;
 }
 
-void Bank::get_interest(int day)
+void Bank::get_interest(int day) // calulates the daily interest then after 30 days it adds it to your account.
 {
-  /* if(day >=30)
-   {
-      for(int i = 30; i <= day; i++)
-      {
-         if(!(i % 30))
-         {
-            total_balance *=  interest_rate;
-            std::cout << "Current Balance with interest is: " << total_balance << std::endl;
-         }
-      }
-   }*/
      
-    std::cout << day << " " <<  previous_day << std::endl;  
+   // std::cout << day << " " <<  previous_day << std::endl;  
     
     int i = (day / 30) * 30;
 
-    if( i > previous_day && i < day)
+    if( i > previous_day && i < day) // this is what I used to ensure its within the 30 day month.
     total_balance *= interest_rate;
     
-    total_interest = total_balance * (interest_rate - 1);     
+    total_interest = total_balance * (interest_rate - 1); // shows only the interest rate
 }
 
-double Bank::add_balance(double a)
+double Bank::add_balance(double a) // take the transactions and adds it to a total balance.
 {
    total_balance = total_balance + a; 
 }
 
-double Bank::average_daily(double a)
+double Bank::average_daily(double average, int day) // similar to the get interest, but calculates the average daily.
 {
-/*
-   double average;  
-   double average_outcome;    
-
-   std::vector<double> maths;
+   double total_average = 0.0;  
    
-   maths.push_back(a);
-
-   std::cout << "things" << std::endl;
-
-   for(int i = 0; i < maths; i++)
-   {
-     average = average + a;
-   }
- 
-   average_outcome = average / i;
-*/
+   int i = (day / 30) * 30;
+  
+   if( i > previous_day && i < day)
+     total_average += average;
+  
+   the_average = total_average / 30.0;
+  
 }
-
-
 
 double Bank::get_average()
 {
-   return 0; 
+   return the_average; 
 }
 
-double Bank::min_daily(double a = 35)
+double Bank::min_daily(double a = 35) // deducts 35 dollars when your account get below 500.
 {
    if(total_balance < 500)
    {
@@ -184,11 +165,9 @@ int main()
       b.add_balance(temp_addtobal);
       
       day = t.get_day();
-      
-      b.get_interest(day);
-      
-     // b.min_daily();
-     // b.average_daily(temp_addtobal);
+      b.get_interest(day); 
+      b.min_daily();
+      b.average_daily(temp_addtobal, day);
       b.set_previous_day(t.get_day());
       transaction.push_back(t);
       b.print();
